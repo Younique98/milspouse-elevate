@@ -1,74 +1,194 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MilSpouse Elevate
 
-## Getting Started
+MilSpouse Elevate is a modern web platform designed to connect military spouses with career opportunities, training, and resources. Built with Next.js 14 and modern web technologies, this platform aims to empower military families through professional development.
 
-First, run the development server:
+## Tech Stack
 
+- Frontend Framework: Next.js 14 (with App Router)
+- Language: TypeScript
+- Styling: Tailwind CSS + shadcn/ui
+- Database: PostgreSQL
+- ORM: Prisma
+- Authentication: NextAuth.js
+- Development Server: Turbopack
+
+## Prerequisites
+Before you begin, ensure you have the following installed:
+
+- Node.js (v18 or higher)
+- PostgreSQL
+- npm or yarn
+- Git
+
+### Getting Started
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/milspouse-elevate.git
+cd milspouse-elevate
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash 
+npm install or yarn
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Set up environment variables
+Create a .env file in the root directory and add the following:
 
-## Learn More
+``` env
+### Database
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
 
-To learn more about Next.js, take a look at the following resources:
+# Next Auth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key"
+``` 
+Set up the database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash 
+# Start PostgreSQL service
+# For Mac:
+brew services start postgresql
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# For Windows:
+# Start PostgreSQL service from Services app
 
-## Deploy on Vercel
+# For Linux:
+sudo systemctl start postgresql
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Initialize Prisma and create database tables
+npx prisma generate
+npx prisma migrate dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Run the development server
+```bash
+npm run dev
+```
+Open http://localhost:3000 with your browser to see the result.
 
-## Project structure
+### Project Structure
+```bash 
 milspouse-elevate/
 ├── src/
 │   ├── app/
-│   │   ├── (auth)/
+│   │   ├── (auth)/            # Authentication related pages
 │   │   │   ├── login/
 │   │   │   └── register/
-│   │   ├── (dashboard)/
+│   │   ├── (dashboard)/       # Protected dashboard routes
 │   │   │   └── opportunities/
-│   │   ├── api/
+│   │   ├── api/               # API routes
 │   │   │   ├── auth/
 │   │   │   ├── opportunities/
 │   │   │   └── applications/
 │   │   └── layout.tsx
-│   ├── components/
-│   │   ├── ui/
-│   │   ├── shared/
-│   │   └── features/
-│   ├── lib/
-│   │   ├── prisma/
-│   │   ├── utils/
-│   │   └── types/
-│   └── styles/
-├── prisma/
+│   ├── components/            # React components
+│   │   ├── ui/               # shadcn/ui components
+│   │   ├── shared/           # Shared components
+│   │   └── features/         # Feature-specific components
+│   ├── lib/                  # Utility functions and configurations
+│   │   ├── prisma/          # Database client
+│   │   ├── utils/           # Helper functions
+│   │   └── types/           # TypeScript types
+│   └── styles/              # Global styles
+├── prisma/                  # Prisma schema and migrations
 │   └── schema.prisma
-├── public/
+├── public/                  # Static files
 └── package.json
+```
 
-## FYI
-### Use of Parentheses in Folder names -  allows for route grouping without affecting the URL path
-app/
-  (auth)/
-    login/      -> URL: /login
-    signup/     -> URL: /signup
-  (dashboard)/
-    profile/    -> URL: /profile
-    settings/   -> URL: /settings
+## Database Schema
+Our PostgreSQL database includes the following main models:
+
+User
+Opportunity
+Application
+```prisma
+model User {
+  id                String         @id @default(cuid())
+  email             String         @unique
+  name              String?
+  militaryAffiliation String?
+  currentLocation    String?
+  willingToRelocate  Boolean       @default(false)
+  applications      Application[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Opportunity {
+  id            String         @id @default(cuid())
+  title         String
+  company       String
+  location      String?
+  type          String
+  description   String
+  requirements  String[]
+  isRemote      Boolean        @default(false)
+  applications  Application[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Application {
+  id             String       @id @default(cuid())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  opportunity    Opportunity  @relation(fields: [opportunityId], references: [id])
+  opportunityId  String
+  status         String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([opportunityId])
+}
+```
+## Development
+- I used Turbopack for faster development builds
+- shadcn/ui components are used for consistent UI elements
+- Tailwind CSS for styling
+- TypeScript for type safety
+
+## Working with the Database
+
+To create a new migration after modifying the schema:
+```bash
+npx prisma migrate dev --name your_migration_name
+```
+
+To reset the database:
+```bash
+npx prisma migrate reset
+```
+
+To view your database with Prisma Studio:
+```bash
+npx prisma studio
+```
+
+### Deployment
+The application can be deployed on Vercel:
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Configure environment variables
+4. Deploy
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (git checkout -b feature/AmazingFeature)
+3. Commit your changes (git commit -m 'Add some AmazingFeature')
+4. Push to the branch (git push origin feature/AmazingFeature)
+5. Open a Pull Request
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+Acknowledgments
+
+### Acknowledgments
+Built with shadcn/ui components
+Powered by Next.js
