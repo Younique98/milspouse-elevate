@@ -146,6 +146,15 @@ model Application {
   @@index([opportunityId])
 }
 ```
+
+## Features
+
+- User Authentication: Secure login and registration via NextAuth.js
+
+- Opportunity Management: Post, view, and apply for job opportunities
+
+- Responsive Design: Mobile-first layout using Tailwind CSS
+
 ## Development
 - I used Turbopack for faster development builds
 - shadcn/ui components are used for consistent UI elements
@@ -177,6 +186,20 @@ The application can be deployed on Vercel:
 3. Configure environment variables
 4. Deploy
 
+### Testing
+
+## Running Tests
+
+If tests are implemented, use:
+
+```npm test```
+
+### Planned Testing
+
+Unit tests and integration tests will be added in the next phase of development.
+
+### Visuals 
+![v1_landing_page](/public/snapshot_landing_page_v1.jpeg)
 ## Contributing
 
 1. Fork the repository

@@ -85,7 +85,7 @@ export const OpportunitiesSection = () => {
                                 <CardContent className="p-0">
                                     <div className="p-6">
                                         <div className="flex items-center justify-between mb-4">
-                                            <span className="px-3 py-8 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                                            <span className="px-3 py-3 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
                                                 {opportunity.type}
                                             </span>
                                         <span className="text-gray-500 text-sm">{opportunity.posted}</span>

@@ -20,7 +20,7 @@ export const Header = () => {
 
                             >
                                 <span className="text-2xl font-bold">
-                                 <span className="text-blue-900">MilSouse</span>
+                                 <span className="text-blue-900">MilSpouse</span>
                                 <span className="text-indigo-600">Elevate</span>   
                                 </span>
                             </Link>
