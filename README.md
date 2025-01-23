@@ -2,6 +2,8 @@
 
 MilSpouse Elevate is a modern web platform designed to connect military spouses with career opportunities, training, and resources. Built with Next.js 14 and modern web technologies, this platform aims to empower military families through professional development.
 
+![MilSpouse](https://github.com/user-attachments/assets/f8c031dc-7b4c-4d62-ae07-19d2015b8e78)
+
 ## Tech Stack
 
 - Frontend Framework: Next.js 14 (with App Router)
